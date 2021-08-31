@@ -92,35 +92,6 @@ public class CoffeeMakerTest {
 		recipe4.setAmtSugar("1");
 		recipe4.setPrice("65");
 	}
-	
-	
-	/**
-	 * Given a coffee maker with the default inventory
-	 * When we add inventory with well-formed quantities
-	 * Then we do not get an exception trying to read the inventory quantities.
-	 * 
-	 * @throws InventoryException  if there was an error parsing the quanity
-	 * 		to a positive integer.
-	 */
-	@Test
-	public void testAddInventory() throws InventoryException {
-		coffeeMaker.addInventory("4","7","0","9");
-
-	}
-	
-	/**
-	 * Given a coffee maker with the default inventory
-	 * When we add inventory with malformed quantities (i.e., a negative 
-	 * quantity and a non-numeric string)
-	 * Then we get an inventory exception
-	 * 
-	 * @throws InventoryException  if there was an error parsing the quanity
-	 * 		to a positive integer.
-	 */
-	@Test(expected = InventoryException.class)
-	public void testAddInventoryException() throws InventoryException {
-		coffeeMaker.addInventory("4", "-1", "asdf", "3");
-	}
 
 	/**
 	 * Given a coffee maker with the recipe book
@@ -165,6 +136,7 @@ public class CoffeeMakerTest {
 	public void testDeleteRecipeThatExistent(){
 		coffeeMaker.addRecipe(recipe1);
 		assertEquals(recipe1.getName(),coffeeMaker.deleteRecipe(0));
+		System.out.println(coffeeMaker.getRecipes());
 		assertNull(coffeeMaker.deleteRecipe(0)); //Check that their no recipe in the recipe book.
 	}
 
@@ -201,6 +173,34 @@ public class CoffeeMakerTest {
 				"Milk: 14\n" +
 				"Sugar: 14\n" +
 				"Chocolate: 15\n",coffeeMaker.checkInventory());
+	}
+
+	/**
+	 * Given a coffee maker with the default inventory
+	 * When we add inventory with well-formed quantities
+	 * Then we do not get an exception trying to read the inventory quantities.
+	 *
+	 * @throws InventoryException  if there was an error parsing the quanity
+	 * 		to a positive integer.
+	 */
+	@Test
+	public void testAddInventory() throws InventoryException {
+		coffeeMaker.addInventory("4","7","0","9");
+
+	}
+
+	/**
+	 * Given a coffee maker with the default inventory
+	 * When we add inventory with malformed quantities (i.e., a negative
+	 * quantity and a non-numeric string)
+	 * Then we get an inventory exception
+	 *
+	 * @throws InventoryException  if there was an error parsing the quanity
+	 * 		to a positive integer.
+	 */
+	@Test(expected = InventoryException.class)
+	public void testAddInventoryException() throws InventoryException {
+		coffeeMaker.addInventory("4", "-1", "asdf", "3");
 	}
 
 	/**
