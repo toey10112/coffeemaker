@@ -1,4 +1,4 @@
-CoffeeMaker JUnit - Buggy Version
+CoffeeMaker JUnit 
 =================================
 ## Documents
 
