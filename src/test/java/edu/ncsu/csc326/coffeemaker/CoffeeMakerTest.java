@@ -136,7 +136,7 @@ public class CoffeeMakerTest {
 	public void testDeleteRecipeThatExistent(){
 		coffeeMaker.addRecipe(recipe1);
 		assertEquals(recipe1.getName(),coffeeMaker.deleteRecipe(0));
-		System.out.println(coffeeMaker.getRecipes());
+
 		assertNull(coffeeMaker.deleteRecipe(0)); //Check that their no recipe in the recipe book.
 	}
 
