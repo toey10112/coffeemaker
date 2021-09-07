@@ -252,7 +252,7 @@ public class CoffeeMakerTest {
 
 	/**
 	 * Given a coffee maker with the recipe book
-	 * When we buy beverage but it doesn't have in menu
+	 * When we buy beverage, but it doesn't have in menu
 	 * it will return the money back.
 	 */
 	@Test
