@@ -208,12 +208,10 @@ public class CoffeeMakerTest {
 	 * When we check inventory
 	 * we should see the units of each item in the inventory.
 	 *
-	 * @throws InventoryException  if there was an error parsing the quanity
-	 * 	  		to a positive integer.
 	 *
 	 */
 	@Test
-	public void testCheckInventory() throws InventoryException{
+	public void testCheckInventory() {
 		assertEquals("Coffee: 15\n" + "Milk: 15\n" + "Sugar: 15\n" + "Chocolate: 15\n",coffeeMaker.checkInventory());
 	}
 
@@ -249,6 +247,17 @@ public class CoffeeMakerTest {
 	public void testPurchaseBeverageWithoutEnoughIngredients(){
 		coffeeMaker.addRecipe(recipe2); // Chocolate need : 20 but we only have 15
 		assertEquals(75,coffeeMaker.makeCoffee(0,75));
+
+	}
+
+	/**
+	 * Given a coffee maker with the recipe book
+	 * When we buy beverage but it doesn't have in menu
+	 * it will return the money back.
+	 */
+	@Test
+	public void testPurchaseBeverageWithoutBeverageInMenu(){
+		assertEquals(100,coffeeMaker.makeCoffee(0,100));
 
 	}
 
