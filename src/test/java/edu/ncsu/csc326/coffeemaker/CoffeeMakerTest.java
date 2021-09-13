@@ -102,8 +102,7 @@ public class CoffeeMakerTest {
 		inventory  = new Inventory();
 		recipeBookMock = mock(RecipeBook.class);
 		coffeeMakerwithRecipeMock = new CoffeeMaker(recipeBookMock,inventory);
-		recipeList = new Recipe[]{recipe1,recipe4};
-		when(recipeBookMock.getRecipes()).thenReturn(recipeList);
+		recipeList = new Recipe[]{recipe1,recipe2,recipe3,recipe4};
 
 	}
 
@@ -277,27 +276,15 @@ public class CoffeeMakerTest {
 
 	/**
 	 * Given a coffee maker with the recipe book
-	 * When we buy beverage,the ingredients should be reduced according to the beverage recipe.
-	 */
-	@Test
-	public void mockTestRemoveIngredientsFromPurchaseBeverage(){
-		verify(recipeBookMock.getRecipes());
-		coffeeMakerwithRecipeMock.makeCoffee(0,50);
-		assertEquals("Coffee: 12\n" +
-				"Milk: 14\n" +
-				"Sugar: 14\n" +
-				"Chocolate: 15\n",coffeeMakerwithRecipeMock.checkInventory());
-	}
-
-	/**
-	 * Given a coffee maker with the recipe book
 	 * When we pay less than the cost of the coffee
 	 * we can't buy coffee and get the money back.
 	 */
 	@Test
 	public void mockTestPurchaseBeverageWithoutEnoughMoney(){
-		verify(recipeBookMock.getRecipes());
-		assertEquals(74,coffeeMakerwithRecipeMock.makeCoffee(2,74)); //recipe3
+		when(recipeBookMock.getRecipes()).thenReturn(recipeList);
+		assertEquals(74,coffeeMakerwithRecipeMock.makeCoffee(2,74)); //recipe 3 : price 100
+		// When we buy a beverage without enough money in the coffeeMaker, getRecipes() is called 2 times.
+		verify(recipeBookMock, times(2)).getRecipes();
 	}
 
 	/**
@@ -306,10 +293,13 @@ public class CoffeeMakerTest {
 	 * But if we pay with more money than the price, we should get a change return.
 	 */
 	@Test
-	public void mockTestPurchaseBeverageWithEnoughMoneyAndMore(){
-		verify(recipeBookMock.getRecipes());
-		assertEquals(0,coffeeMakerwithRecipeMock.makeCoffee(2,100)); //recipe3
-		assertEquals(1,coffeeMakerwithRecipeMock.makeCoffee(2,101)); //recipe3
+	public void mockTestPurchaseBeverageWithEnoughMoneyAndMoreAndEnoughIngredients(){
+		when(recipeBookMock.getRecipes()).thenReturn(recipeList);
+		assertEquals(0,coffeeMakerwithRecipeMock.makeCoffee(2,100)); //recipe 3 : price 100
+		assertEquals(1,coffeeMakerwithRecipeMock.makeCoffee(2,101)); //recipe 3 : price 100
+		// for success purchase in the coffeeMaker, getRecipes() is called 4 times.
+		// but we buy two item so getRecipes() is called 8 times.
+		verify(recipeBookMock, times(8)).getRecipes();
 	}
 
 	/**
@@ -319,9 +309,10 @@ public class CoffeeMakerTest {
 	 */
 	@Test
 	public void mockTestPurchaseBeverageWithoutEnoughIngredients(){
-		verify(recipeBookMock.getRecipes());
-		assertEquals(75,coffeeMakerwithRecipeMock.makeCoffee(1,75));// recipe2: Chocolate need : 20 but we only have 15
-
+		when(recipeBookMock.getRecipes()).thenReturn(recipeList);
+		assertEquals(75,coffeeMakerwithRecipeMock.makeCoffee(1,75)); // recipe 2 : need chocolate 20, but we only have 15 in inventory
+		// When we buy a beverage but the inventory doesn't have enough ingredients, getRecipes() is called 3 times.
+		verify(recipeBookMock, times(3)).getRecipes();
 	}
 
 	/**
@@ -331,10 +322,35 @@ public class CoffeeMakerTest {
 	 */
 	@Test
 	public void mockTestPurchaseBeverageWithoutBeverageInMenu(){
-		verify(recipeBookMock.getRecipes());
-		assertEquals(100,coffeeMakerwithRecipeMock.makeCoffee(5,100));
+		when(recipeBookMock.getRecipes()).thenReturn(new Recipe[]{recipe1,null});
+		assertEquals(10,coffeeMakerwithRecipeMock.makeCoffee(1,10));
+		// When we buy a beverage but the menu doesn't have a beverage, getRecipes() is called 1 time.
+		verify(recipeBookMock, atMostOnce()).getRecipes();
 
 	}
+
+	/**
+	 * Given a coffee maker with the recipe book
+	 * When we buy beverage,the ingredients should be reduced according to the beverage recipe.
+	 */
+	@Test
+	public void mockTestRemoveIngredientsFromPurchaseBeverage(){
+		when(recipeBookMock.getRecipes()).thenReturn(recipeList);
+
+		coffeeMaker.addRecipe(recipe1);
+		coffeeMakerwithRecipeMock.makeCoffee(0,50);
+		assertEquals("Coffee: 12\n" +
+				"Milk: 14\n" +
+				"Sugar: 14\n" +
+				"Chocolate: 15\n",coffeeMakerwithRecipeMock.checkInventory());
+		verify(recipeBookMock, times(4)).getRecipes();
+	}
+
+
+
+
+
+
 
 
 
