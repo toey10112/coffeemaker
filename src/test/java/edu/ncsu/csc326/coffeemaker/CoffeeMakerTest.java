@@ -18,7 +18,7 @@
  */
 package edu.ncsu.csc326.coffeemaker;
 import static org.junit.Assert.*;
-
+import static org.mockito.Mockito.*;
 
 
 import org.junit.Before;
@@ -44,6 +44,12 @@ public class CoffeeMakerTest {
 	private Recipe recipe2;
 	private Recipe recipe3;
 	private Recipe recipe4;
+
+	private RecipeBook recipeBookMock;
+	private Inventory inventory;
+	private CoffeeMaker coffeeMakerwithRecipeMock;
+	private Recipe[] recipeList;
+
 
 	/**
 	 * Initializes some recipes to test with and the {@link CoffeeMaker} 
@@ -91,6 +97,14 @@ public class CoffeeMakerTest {
 		recipe4.setAmtMilk("1");
 		recipe4.setAmtSugar("1");
 		recipe4.setPrice("65");
+
+		//set up for mock
+		inventory  = new Inventory();
+		recipeBookMock = mock(RecipeBook.class);
+		coffeeMakerwithRecipeMock = new CoffeeMaker(recipeBookMock,inventory);
+		recipeList = new Recipe[]{recipe1,recipe4};
+		when(recipeBookMock.getRecipes()).thenReturn(recipeList);
+
 	}
 
 	/**
@@ -260,6 +274,75 @@ public class CoffeeMakerTest {
 		assertEquals(100,coffeeMaker.makeCoffee(0,100));
 
 	}
+
+	/**
+	 * Given a coffee maker with the recipe book
+	 * When we buy beverage,the ingredients should be reduced according to the beverage recipe.
+	 */
+	@Test
+	public void mockTestRemoveIngredientsFromPurchaseBeverage(){
+		verify(recipeBookMock.getRecipes());
+		coffeeMakerwithRecipeMock.makeCoffee(0,50);
+		assertEquals("Coffee: 12\n" +
+				"Milk: 14\n" +
+				"Sugar: 14\n" +
+				"Chocolate: 15\n",coffeeMakerwithRecipeMock.checkInventory());
+	}
+
+	/**
+	 * Given a coffee maker with the recipe book
+	 * When we pay less than the cost of the coffee
+	 * we can't buy coffee and get the money back.
+	 */
+	@Test
+	public void mockTestPurchaseBeverageWithoutEnoughMoney(){
+		verify(recipeBookMock.getRecipes());
+		assertEquals(74,coffeeMakerwithRecipeMock.makeCoffee(2,74)); //recipe3
+	}
+
+	/**
+	 * Given a coffee maker with the recipe book
+	 * When we pay with enough money then the money that we get back should be 0
+	 * But if we pay with more money than the price, we should get a change return.
+	 */
+	@Test
+	public void mockTestPurchaseBeverageWithEnoughMoneyAndMore(){
+		verify(recipeBookMock.getRecipes());
+		assertEquals(0,coffeeMakerwithRecipeMock.makeCoffee(2,100)); //recipe3
+		assertEquals(1,coffeeMakerwithRecipeMock.makeCoffee(2,101)); //recipe3
+	}
+
+	/**
+	 * Given a coffee maker with the recipe book
+	 * When we buy beverage if it doesn't have enough ingredients in the inventory
+	 * it will return the money back.
+	 */
+	@Test
+	public void mockTestPurchaseBeverageWithoutEnoughIngredients(){
+		verify(recipeBookMock.getRecipes());
+		assertEquals(75,coffeeMakerwithRecipeMock.makeCoffee(1,75));// recipe2: Chocolate need : 20 but we only have 15
+
+	}
+
+	/**
+	 * Given a coffee maker with the recipe book
+	 * When we buy beverage, but it doesn't have in menu
+	 * it will return the money back.
+	 */
+	@Test
+	public void mockTestPurchaseBeverageWithoutBeverageInMenu(){
+		verify(recipeBookMock.getRecipes());
+		assertEquals(100,coffeeMakerwithRecipeMock.makeCoffee(5,100));
+
+	}
+
+
+
+
+
+
+
+
 
 
 
