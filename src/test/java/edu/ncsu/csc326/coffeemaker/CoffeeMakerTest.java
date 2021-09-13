@@ -325,7 +325,7 @@ public class CoffeeMakerTest {
 		when(recipeBookMock.getRecipes()).thenReturn(new Recipe[]{recipe1,null});
 		assertEquals(10,coffeeMakerwithRecipeMock.makeCoffee(1,10));
 		// When we buy a beverage but the menu doesn't have a beverage, getRecipes() is called 1 time.
-		verify(recipeBookMock, atMostOnce()).getRecipes();
+		verify(recipeBookMock, times(1)).getRecipes();
 
 	}
 
