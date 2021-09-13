@@ -336,13 +336,12 @@ public class CoffeeMakerTest {
 	@Test
 	public void mockTestRemoveIngredientsFromPurchaseBeverage(){
 		when(recipeBookMock.getRecipes()).thenReturn(recipeList);
-
-		coffeeMaker.addRecipe(recipe1);
 		coffeeMakerwithRecipeMock.makeCoffee(0,50);
 		assertEquals("Coffee: 12\n" +
 				"Milk: 14\n" +
 				"Sugar: 14\n" +
 				"Chocolate: 15\n",coffeeMakerwithRecipeMock.checkInventory());
+		// for success purchase in the coffeeMaker, getRecipes() is called 4 times.
 		verify(recipeBookMock, times(4)).getRecipes();
 	}
 
