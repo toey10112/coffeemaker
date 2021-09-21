@@ -58,7 +58,7 @@ public class RecipeCucumberTest {
 
     }
     @Then("coffeemaker return name of recipe {int}")
-    public void coffeemakerReturnNameOfRecipe(int arg0) {
-        assertEquals("blackcoffee",coffeeMaker.deleteRecipe(0));
+    public void coffeemakerReturnNameOfRecipe(int recipe) {
+        assertEquals("blackcoffee",coffeeMaker.deleteRecipe(recipe-1));
     }
 }
